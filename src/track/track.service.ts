@@ -15,7 +15,7 @@ export class TrackService {
 		const autoPath = this.fileService.createFile(FileType.AUDIO, audio);
 		const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
 		const track = await this.trackRepository.create({
-			...dto,
+			...dto, 
 			audio: autoPath,
 			picture: picturePath,
 		});
