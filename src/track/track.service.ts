@@ -3,6 +3,7 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { Track } from './track.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { FileService, FileType } from 'src/file/file.service';
+import * as mm from 'music-metadata';
 
 @Injectable({})
 export class TrackService {
@@ -11,12 +12,21 @@ export class TrackService {
 		private fileService: FileService
 	) {}
 
-	async create(dto: CreateTrackDto, picture, audio): Promise<Track> {
-		const autoPath = this.fileService.createFile(FileType.AUDIO, audio);
-		const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
+	async create(audio): Promise<Track> {
+		// console.log(audio);
+
+		const metadata = await mm.parseBuffer(audio.buffer);
+		const { genre, artist, picture, title } = metadata.common;
+
+		// console.log(picture[0]);
+
+		const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
+		const picturePath = this.fileService.createCover(FileType.IMAGE, picture[0]);
+
 		const track = await this.trackRepository.create({
-			...dto, 
-			audio: autoPath,
+			name: title,
+			artist: artist,
+			audio: audioPath,
 			picture: picturePath,
 		});
 		return track;
@@ -30,6 +40,15 @@ export class TrackService {
 
 	async getOne(name: string) {
 		const track = await this.trackRepository.findOne({ where: { name }, include: { all: true } });
+		return track;
+	}
+
+	async deleteAll() {
+		const track = await this.trackRepository.destroy({
+			where: {},
+			truncate: true,
+		});
+		this.fileService.removeAllFile();
 		return track;
 	}
 
