@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { RolesGuard } from './auth/roles.guard';
+import { ValidationPipe } from '@nestjs/common';
 
 const start = async () => {
 	try {
@@ -14,6 +15,8 @@ const start = async () => {
 		SwaggerModule.setup('/api/docs', app, document);
 
 		// app.useGlobalGuards(RolesGuard);
+
+		app.useGlobalPipes(new ValidationPipe());
 
 		// app.enableCors();
 		await app.listen(PORT, () => console.log('server started on PORT ' + PORT));

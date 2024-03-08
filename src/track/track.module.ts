@@ -1,17 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TrackController } from './track.controller';
 import { TrackService } from './track.service';
-// import { MongooseModule } from '@nestjs/mongoose';
-import { Track, TrackSchema } from './schemas/track.schems';
-import { FileService } from 'src/file/file.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Track } from './track.model';
+import { FileModule } from './../file/file.module';
 
 @Module({
-	// imports: [MongooseModule.forFeature([{ name: Track.name, schema: TrackSchema }])],
-	controllers: [
-		// TrackController
-	],
-	providers: [
-		// TrackService, FileService
-	],
+	controllers: [TrackController],
+	imports: [SequelizeModule.forFeature([Track]), FileModule],
+	providers: [TrackService],
 })
 export class TrackModule {}

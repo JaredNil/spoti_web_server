@@ -13,21 +13,22 @@ import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { Track } from './track/track.model';
 
 @Module({
 	imports: [
-		// ServeStaticModule.forRoot({
-		// 	rootPath: path.resolve(__dirname, 'static'),
-		// }),
-		// MongooseModule.forRoot('mongodb+srv://jaredbozh:3g1k0AFBH88tHiHV@spcluster.zmszjbb.mongodb.net/?retryWrites=true'),
-		// TrackModule,
-		// FileModule,
+		ServeStaticModule.forRoot({
+			rootPath: path.resolve(__dirname, 'static'),
+		}),
+
 		ConfigModule.forRoot({
 			envFilePath: `.${process.env.NODE_ENV}.env`,
 		}),
 		UsersModule,
 		AuthModule,
 		RolesModule,
+		TrackModule,
+		FileModule,
 		SequelizeModule.forRoot({
 			dialect: 'postgres',
 			host: process.env.POSTGRES_HOST,
@@ -35,7 +36,7 @@ import { AuthModule } from './auth/auth.module';
 			username: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
 			database: process.env.POSTGRES_DB,
-			models: [User, Role, UserRoles],
+			models: [User, Role, UserRoles, Track],
 			autoLoadModels: true,
 		}),
 	],
