@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { TrackService } from './track.service';
-import { CreateTrackDto } from './dto/create-track.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('/tracks')
@@ -10,6 +9,7 @@ export class TrackController {
 	@Post()
 	@UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }]))
 	create(@UploadedFiles() files) {
+		console.log(files);
 		return this.trackService.create(files.audio[0]);
 	}
 

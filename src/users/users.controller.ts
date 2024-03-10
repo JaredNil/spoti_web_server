@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -27,6 +27,15 @@ export class UsersController {
 	@Get()
 	getAll() {
 		return this.usersService.getAllUsers();
+	}
+
+	@ApiOperation({ summary: 'Удалить всю базу данных' })
+	// @ApiResponse({ status: 200, type: [User] })
+	// @Roles('ADMIN')
+	// @UseGuards(RolesGuard)
+	@Delete()
+	nullUsersDatabase() {
+		return this.usersService.nullUsersDatabase();
 	}
 
 	@ApiOperation({ summary: 'Выдать роль' })

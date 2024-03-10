@@ -18,7 +18,7 @@ const start = async () => {
 
 		app.useGlobalPipes(new ValidationPipe());
 
-		// app.enableCors();
+		app.enableCors();
 		await app.listen(PORT, () => console.log('server started on PORT ' + PORT));
 	} catch (error) {
 		console.log(error);

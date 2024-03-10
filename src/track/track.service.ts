@@ -4,6 +4,7 @@ import { Track } from './track.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { FileService, FileType } from 'src/file/file.service';
 import * as mm from 'music-metadata';
+import * as uuid from 'uuid';
 
 @Injectable({})
 export class TrackService {
@@ -13,18 +14,18 @@ export class TrackService {
 	) {}
 
 	async create(audio): Promise<Track> {
-		// console.log(audio);
+		console.log(audio);
 
 		const metadata = await mm.parseBuffer(audio.buffer);
 		const { genre, artist, picture, title } = metadata.common;
 
-		// console.log(picture[0]);
-
+		const idTrack = title + uuid.v4();
 		const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
 		const picturePath = this.fileService.createCover(FileType.IMAGE, picture[0]);
 
 		const track = await this.trackRepository.create({
-			name: title,
+			// id: idTrack,
+			name: idTrack,
 			artist: artist,
 			audio: audioPath,
 			picture: picturePath,
