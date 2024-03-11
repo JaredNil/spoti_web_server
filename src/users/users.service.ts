@@ -23,12 +23,12 @@ export class UsersService {
 
 	async nullUsersDatabase() {
 		try {
-			const res = this.userRepository.destroy({ truncate: true });
+			const res = this.userRepository.destroy({ truncate: true, cascade: true });
 			console.log(res);
 		} catch (error) {
 			console.log(error);
 		}
-		// const userCommon = await this.userRepository.create({ email: 'common', password: 'common' });
+		const userCommon = await this.userRepository.create({ email: 'common', password: 'common' });
 		// const role = await this.roleService.getRoleByValue('ADMIN');
 		// await userCommon.$set('roles', [role.id]);
 		const users = await this.getAllUsers();

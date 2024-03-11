@@ -16,4 +16,18 @@ export class RolesService {
 		const role = await this.roleRepository.findOne({ where: { value } });
 		return role;
 	}
+
+	async getAllRoles() {
+		const roles = await this.roleRepository.findAll({ include: { all: true } });
+		return roles;
+	}
+
+	async nullRolesDatabase() {
+		const res = await this.roleRepository.destroy({ truncate: true, cascade: true });
+		// const userCommon = await this.userRepository.create({ email: 'common', password: 'common' });
+		// const role = await this.roleService.getRoleByValue('ADMIN');
+		// await userCommon.$set('roles', [role.id]);
+		const roles = await this.getAllRoles();
+		return roles;
+	}
 }
