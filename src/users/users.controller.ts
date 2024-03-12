@@ -38,14 +38,14 @@ export class UsersController {
 		return this.usersService.nullUsersDatabase();
 	}
 
-	@ApiOperation({ summary: 'Выдать роль' })
-	@ApiResponse({ status: 200 })
-	// @Roles('ADMIN')
-	@UseGuards(RolesGuard)
-	@Post('/role')
-	addRole(@Body() dto: AddRoleDto) {
-		return this.usersService.addRole(dto);
-	}
+	// @ApiOperation({ summary: 'Выдать роль' })
+	// @ApiResponse({ status: 200 })
+	// // @Roles('ADMIN')
+	// @UseGuards(RolesGuard)
+	// @Post('/role')
+	// addRole(@Body() dto: AddRoleDto) {
+	// 	return this.usersService.addRole(dto);
+	// }
 
 	@ApiOperation({ summary: 'Забанить пользователя' })
 	@ApiResponse({ status: 200 })

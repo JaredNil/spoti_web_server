@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TrackModule } from './track/track.module';
+// import { TrackModule } from './track/track.module';
 import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
@@ -11,9 +11,10 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
 import { AuthModule } from './auth/auth.module';
-import { Track } from './track/track.model';
+// import { Track } from './track/track.model';
 import { AlbumModule } from './album/album.module';
 import { Album } from './album/album.model';
+import { UserAlbums } from './user-albums/user-albums.model';
 
 @Module({
 	imports: [
@@ -26,8 +27,8 @@ import { Album } from './album/album.model';
 		}),
 		UsersModule,
 		AuthModule,
-		RolesModule,
-		TrackModule,
+		// RolesModule,
+		// TrackModule,
 		AlbumModule,
 		FileModule,
 		SequelizeModule.forRoot({
@@ -37,7 +38,12 @@ import { Album } from './album/album.model';
 			username: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
 			database: process.env.POSTGRES_DB,
-			models: [User, Role, UserRoles, Track, Album],
+			models: [
+				User,
+				// Track,
+				Album,
+				UserAlbums,
+			],
 			autoLoadModels: true,
 		}),
 	],

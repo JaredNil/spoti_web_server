@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
-import { Role } from 'src/roles/roles.model';
-import { UserRoles } from 'src/roles/user-roles.model';
+import { Album } from 'src/album/album.model';
+import { UserAlbums } from 'src/user-albums/user-albums.model';
 
 interface UserCreationAttrs {
 	email: string;
@@ -30,6 +30,7 @@ export class User extends Model<User, UserCreationAttrs> {
 	@Column({ type: DataType.STRING, allowNull: true })
 	banReason: string;
 
-	@BelongsToMany(() => Role, () => UserRoles)
-	roles: Role[];
+	@ApiProperty({ example: '[Liked, Sth...]', description: 'Объект с альбомами пользователя, первый объект выдается при регистрации.' })
+	@BelongsToMany(() => Album, () => UserAlbums)
+	albums: Album[];
 }
