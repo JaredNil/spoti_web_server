@@ -6,13 +6,14 @@ import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { Album } from 'src/album/album.model';
+import { FileService } from 'src/file/file.service';
 
 @Injectable({})
 export class UsersService {
 	constructor(
 		@InjectModel(User) private userRepository: typeof User,
 		@InjectModel(Album) private albumRepository: typeof Album,
-		private roleService: RolesService
+		private fileService: FileService
 	) {}
 
 	async createUser(dto: CreateUserDto) {
@@ -26,7 +27,6 @@ export class UsersService {
 	async nullUsersDatabase() {
 		try {
 			const res = this.userRepository.destroy({ truncate: true, cascade: true });
-			console.log(res);
 		} catch (error) {
 			console.log(error);
 		}
@@ -51,10 +51,12 @@ export class UsersService {
 		const user1 = await this.userRepository.findOne({ include: { all: true }, where: { id: userCommon.id } });
 		const albumStack1 = [...user1.albums];
 
+		await this.fileService.pushInitTracks(user1.albums[0].id);
+
 		await this.userRepository.update({ albums: [...albumStack1, albumLiked2] }, { where: { id: userCommon.id } });
 		const user2 = await this.userRepository.findOne({ include: { all: true }, where: { id: userCommon.id } });
 		const albumStack2 = [...user2.albums];
-		
+
 		await this.userRepository.update({ albums: [...albumStack2, albumLiked3] }, { where: { id: userCommon.id } });
 
 		return await this.getAllUsers();
