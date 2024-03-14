@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { Album } from 'src/album/album.model';
-import { UserAlbums } from 'src/user-albums/user-albums.model';
+// import { UserAlbums } from 'src/user-albums/user-albums.model';
 
 interface UserCreationAttrs {
 	email: string;
@@ -30,7 +30,11 @@ export class User extends Model<User, UserCreationAttrs> {
 	@Column({ type: DataType.STRING, allowNull: true })
 	banReason: string;
 
+	// @ApiProperty({ example: '[Liked, Sth...]', description: 'Объект с альбомами пользователя, первый объект выдается при регистрации.' })
+	// @BelongsToMany(() => Album, () => UserAlbums)
+	// albums: Album[];
+
 	@ApiProperty({ example: '[Liked, Sth...]', description: 'Объект с альбомами пользователя, первый объект выдается при регистрации.' })
-	@BelongsToMany(() => Album, () => UserAlbums)
+	@HasMany(() => Album)
 	albums: Album[];
 }

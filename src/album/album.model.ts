@@ -1,8 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { Track } from './../track/track.model';
+import { User } from 'src/users/users.model';
 
 interface AlbumCreationAttrs {
 	name: string;
+	userId: number;
 }
 
 @Table({ tableName: 'album' })
@@ -21,5 +24,13 @@ export class Album extends Model<Album, AlbumCreationAttrs> {
 
 	@ApiProperty({ example: 'BLOB2', description: 'Объект с треком.' })
 	@Column({ type: DataType.STRING, allowNull: true })
-	audio: string;
+	tracks: Track[];
+
+	@ForeignKey(() => User)
+	@Column({ type: DataType.INTEGER })
+	userId: number;
+
+	@ApiProperty({ example: 'Username123', description: 'Автор плейлиста' })
+	@BelongsTo(() => User)
+	author: User;
 }

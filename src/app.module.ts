@@ -7,14 +7,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './users/users.model';
-import { RolesModule } from './roles/roles.module';
-import { Role } from './roles/roles.model';
-import { UserRoles } from './roles/user-roles.model';
 import { AuthModule } from './auth/auth.module';
-// import { Track } from './track/track.model';
 import { AlbumModule } from './album/album.module';
 import { Album } from './album/album.model';
-import { UserAlbums } from './user-albums/user-albums.model';
+// import { UserAlbums } from './user-albums/user-albums.model';
+import { TrackModule } from './track/track.module';
+import { Track } from './track/track.model';
 
 @Module({
 	imports: [
@@ -28,7 +26,7 @@ import { UserAlbums } from './user-albums/user-albums.model';
 		UsersModule,
 		AuthModule,
 		// RolesModule,
-		// TrackModule,
+		TrackModule,
 		AlbumModule,
 		FileModule,
 		SequelizeModule.forRoot({
@@ -40,9 +38,9 @@ import { UserAlbums } from './user-albums/user-albums.model';
 			database: process.env.POSTGRES_DB,
 			models: [
 				User,
-				// Track,
+				Track,
 				Album,
-				UserAlbums,
+				//  UserAlbums
 			],
 			autoLoadModels: true,
 		}),
