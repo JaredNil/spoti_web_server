@@ -7,6 +7,15 @@ import * as mm from 'music-metadata';
 import * as uuid from 'uuid';
 import { AlbumService } from 'src/album/album.service';
 
+const defaultCover = [
+	{
+		format: 'image/jpeg',
+		type: 'Cover (front)',
+		description: 'Untitled',
+		data: '32',
+	},
+];
+
 @Injectable({})
 export class TrackService {
 	constructor(
@@ -14,20 +23,20 @@ export class TrackService {
 		private fileService: FileService
 	) {}
 
-	async create(audio): Promise<Track> {
-		console.log(audio);
+	async create(audio, albumId): Promise<Track> {
+		// console.log(audio);
 
 		const metadata = await mm.parseBuffer(audio.buffer);
 		const { genre, artist, picture, title } = metadata.common;
 
 		const idTrack = title + uuid.v4();
 		const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
-		const picturePath = this.fileService.createCover(FileType.IMAGE, picture[0]);
+		const picturePath = picture ? this.fileService.createCover(FileType.IMAGE, picture[0]) : undefined;
 
 		const track = await this.trackRepository.create({
-			// id: idTrack,
 			name: idTrack,
 			artist: artist,
+			albumId: albumId,
 			audio: audioPath,
 			picture: picturePath,
 		});

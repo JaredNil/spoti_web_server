@@ -8,9 +8,9 @@ export class TrackController {
 
 	@Post()
 	@UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }]))
-	create(@UploadedFiles() files) {
+	create(@UploadedFiles() files, albumId) {
 		console.log(files);
-		return this.trackService.create(files.audio[0]);
+		return this.trackService.create(files.audio[0], albumId);
 	}
 
 	@Get()

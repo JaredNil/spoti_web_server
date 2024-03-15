@@ -6,14 +6,22 @@ import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { Album } from 'src/album/album.model';
-import { FileService } from 'src/file/file.service';
+import { FileService, FileType } from 'src/file/file.service';
+
+import * as path from 'path';
+import * as fs from 'fs';
+import * as uuid from 'uuid';
+import { TrackService } from './../track/track.service';
+import { AlbumService } from 'src/album/album.service';
 
 @Injectable({})
 export class UsersService {
 	constructor(
 		@InjectModel(User) private userRepository: typeof User,
 		@InjectModel(Album) private albumRepository: typeof Album,
-		private fileService: FileService
+		private fileService: FileService,
+		private trackService: TrackService,
+		private albumService: AlbumService
 	) {}
 
 	async createUser(dto: CreateUserDto) {
@@ -49,17 +57,47 @@ export class UsersService {
 
 		await this.userRepository.update({ albums: [albumLiked] }, { where: { id: userCommon.id } });
 		const user1 = await this.userRepository.findOne({ include: { all: true }, where: { id: userCommon.id } });
+		// await this.albumService.pushTrack(user1.albums[0].id);
 		const albumStack1 = [...user1.albums];
-
-		await this.fileService.pushInitTracks(user1.albums[0].id);
+		// await this.fileService.pushInitTracks(user1.albums[0]);
+		const track = await this.pushInitTracks(user1.albums[0].id, '1');
 
 		await this.userRepository.update({ albums: [...albumStack1, albumLiked2] }, { where: { id: userCommon.id } });
 		const user2 = await this.userRepository.findOne({ include: { all: true }, where: { id: userCommon.id } });
+		// await this.albumService.pushTrack(user2.albums[1].id);
 		const albumStack2 = [...user2.albums];
 
 		await this.userRepository.update({ albums: [...albumStack2, albumLiked3] }, { where: { id: userCommon.id } });
+		const user3 = await this.userRepository.findOne({ include: { all: true }, where: { id: userCommon.id } });
+		// await this.albumService.pushTrack(user3.albums[2].id);
 
 		return await this.getAllUsers();
+	}
+
+	async pushInitTracks(albumId: number, albumFolder: string) {
+		const folderPathMain = path.resolve('C:\\MAIN__FILES\\FOR_WEB\\spotic_server\\src\\InitTracks\\');
+
+		let fileList = fs.readdirSync(path.resolve(folderPathMain, albumFolder));
+
+		fileList = fileList.map((file) => path.resolve(folderPathMain, albumFolder, file));
+
+		let result = '';
+
+		fileList.forEach((filePath) => {
+			fs.readFile(filePath, async (_, data) => {
+				const fileInstance = {
+					audio: [
+						{
+							buffer: data,
+							size: data.byteLength,
+						},
+					],
+				};
+
+				const track = await this.trackService.create(fileInstance.audio[0] , albumId);
+				await this.albumService.pushTrack(albumId, track);
+			});
+		});
 	}
 
 	async getAllUsers() {

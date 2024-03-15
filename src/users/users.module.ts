@@ -10,6 +10,8 @@ import { AuthModule } from 'src/auth/auth.module';
 // import { UserAlbums } from 'src/user-albums/user-albums.model';
 import { Album } from 'src/album/album.model';
 import { FileModule } from 'src/file/file.module';
+import { TrackModule } from 'src/track/track.module';
+import { AlbumModule } from 'src/album/album.module';
 
 @Module({
 	controllers: [UsersController],
@@ -22,6 +24,8 @@ import { FileModule } from 'src/file/file.module';
 		]),
 		RolesModule,
 		FileModule,
+		TrackModule,
+		AlbumModule,
 		forwardRef(() => AuthModule),
 	],
 	exports: [UsersService],
