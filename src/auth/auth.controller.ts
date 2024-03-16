@@ -20,36 +20,42 @@ export class AuthController {
 	@ApiCreatedResponse()
 	@HttpCode(HttpStatus.OK)
 	async signUp(@Body() signDto: SignDto, @Res({ passthrough: true }) res: Response) {
-		const { accessToken } = await this.authService.signUp(signDto);
+		const { token, username } = await this.authService.signUp(signDto);
 
-		this.cookieService.setToken(res, accessToken.token);
+		this.cookieService.setToken(res, token);
 
-		return accessToken;
+		return { token, username };
 	}
 
 	@Post('/signin')
 	@ApiOkResponse()
 	async signIn(@Body() signDto: SignDto, @Res({ passthrough: true }) res: Response) {
-		const { accessToken } = await this.authService.signIn(signDto);
+		const { token, username } = await this.authService.signIn(signDto);
 
-		this.cookieService.setToken(res, accessToken.token);
+		// this.cookieService.setToken(res, accessToken.token);
 
-		return accessToken;
+		return { token, username };
 	}
-
 	@Post('/signout')
 	@HttpCode(HttpStatus.OK)
-	@UseGuards(AuthGuard)
+	// @UseGuards(AuthGuard)
 	signOut(@Res({ passthrough: true }) res: Response) {
 		this.cookieService.removeToken(res);
 	}
 
-	@Get('session')
-	@ApiOkResponse({ type: GetSessionDto })
-	@UseGuards(AuthGuard)
-	getSessionInfo(@SessionInfo() session: GetSessionDto) {
-		return session;
+	@Post('/session')
+	@ApiOkResponse()
+	async getSessionInfo(@Body() sessionDto: GetSessionDto) {
+		return await this.authService.getSessionInfo(sessionDto);
 	}
+
+	// ВЫХОД НЕ КУКИ
+	// @Get('/session')
+	// @ApiOkResponse({ type: GetSessionDto })
+	// @UseGuards(AuthGuard)
+	// getSessionInfo(@SessionInfo() session: GetSessionDto) {
+	// 	return session;
+	// }
 
 	// @Post('/login')
 	// login(@Body() userDto: CreateUserDto) {

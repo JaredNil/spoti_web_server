@@ -21,7 +21,8 @@ const start = async () => {
 
 		app.use(cookieParser());
 
-		app.enableCors();
+		app.enableCors({ credentials: true });
+		
 		await app.listen(PORT, () => console.log('server started on PORT ' + PORT));
 	} catch (error) {
 		console.log(error);

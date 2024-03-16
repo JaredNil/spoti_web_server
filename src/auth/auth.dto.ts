@@ -12,7 +12,7 @@ export class SignDto {
 	readonly password: string;
 }
 
-export class GetSessionDto {
+export class SessionDto {
 	@ApiProperty({ example: 0, description: 'ID user' })
 	readonly id: number;
 
@@ -26,4 +26,8 @@ export class GetSessionDto {
 
 	@ApiProperty()
 	readonly 'exp': number;
+}
+
+export class GetSessionDto {
+	token: string;
 }

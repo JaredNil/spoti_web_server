@@ -2,9 +2,10 @@ import { BadRequestException, HttpException, HttpStatus, Injectable, Unauthorize
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 
-import { GetSessionDto, SignDto } from './auth.dto';
+import { GetSessionDto, SessionDto, SignDto } from './auth.dto';
 import { PasswordService } from './password.service';
 import { User } from 'src/users/users.model';
+import { Session } from 'inspector';
 
 @Injectable()
 export class AuthService {
@@ -33,9 +34,11 @@ export class AuthService {
 
 		const newUser = await this.userService.createUser(signDto.username, hash, salt);
 
-		const accessToken = await this.generateToken(newUser);
+		const { token } = await this.generateToken(newUser);
 
-		return { accessToken };
+		const { username } = newUser;
+
+		return { token, username };
 	}
 	async signIn(signDto: SignDto) {
 		const user = await this.userService.getUserByUsername(signDto.username);
@@ -50,12 +53,25 @@ export class AuthService {
 			throw new UnauthorizedException();
 		}
 
-		const accessToken = await this.generateToken(user);
+		const { token } = await this.generateToken(user);
+		const { username } = user;
 
-		return { accessToken };
+		return { token, username };
 	}
 
-	
+	async getSessionInfo(token: GetSessionDto) {
+		console.log(token.token);
+		const sessionInfo = await this.jwtService.verifyAsync<SessionDto>(token.token, {
+			secret: 'SECRET',
+		});
+
+		const user = await this.userService.getUserByUsername(sessionInfo.username);
+
+		const accessToken = await this.generateToken(user);
+		const { username } = user;
+
+		return { token, username };
+	}
 
 	// async login(userDto: CreateUserDto) {
 	// 	const user = await this.validateUser(userDto);
