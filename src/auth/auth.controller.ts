@@ -1,20 +1,63 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { CreateUserDto } from 'src/users/users.dto';
+import { GetSessionDto, SignDto } from './auth.dto';
+import { CookieService } from './cookie.service';
+import { Response } from 'express';
+import { AuthGuard } from './auth.guard';
+import { SessionInfo } from './session.decorator';
 
 @ApiTags('Авторизация')
 @Controller('auth')
 export class AuthController {
-	constructor(private authService: AuthService) {}
+	constructor(
+		private authService: AuthService,
+		private cookieService: CookieService
+	) {}
 
-	@Post('/login')
-	login(@Body() userDto: CreateUserDto) {
-		return this.authService.login(userDto);
+	@Post('/signup')
+	@ApiCreatedResponse()
+	@HttpCode(HttpStatus.OK)
+	async signUp(@Body() signDto: SignDto, @Res({ passthrough: true }) res: Response) {
+		const { accessToken } = await this.authService.signUp(signDto);
+
+		this.cookieService.setToken(res, accessToken.token);
+
+		return accessToken;
 	}
 
-	@Post('/registration')
-	registration(@Body() userDto: CreateUserDto) {
-		return this.authService.registration(userDto);
+	@Post('/signin')
+	@ApiOkResponse()
+	async signIn(@Body() signDto: SignDto, @Res({ passthrough: true }) res: Response) {
+		const { accessToken } = await this.authService.signIn(signDto);
+
+		this.cookieService.setToken(res, accessToken.token);
+
+		return accessToken;
 	}
+
+	@Post('/signout')
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(AuthGuard)
+	signOut(@Res({ passthrough: true }) res: Response) {
+		this.cookieService.removeToken(res);
+	}
+
+	@Get('session')
+	@ApiOkResponse({ type: GetSessionDto })
+	@UseGuards(AuthGuard)
+	getSessionInfo(@SessionInfo() session: GetSessionDto) {
+		return session;
+	}
+
+	// @Post('/login')
+	// login(@Body() userDto: CreateUserDto) {
+	// 	// return this.authService.login(userDto);
+	// }
+
+	// @Post('/registration')
+	// registration(@Body() userDto: CreateUserDto) {
+	// 	// return this.authService.registration(userDto);
+	// }
 }
