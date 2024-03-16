@@ -1,12 +1,10 @@
-import { Body, Controller, Delete, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User } from './users.model';
-import { Roles } from 'src/auth/auth.decorator';
 import { CreateUserDto } from './users.dto';
-// import { RolesGuard } from 'src/auth/roles.guard';
 
-@ApiTags('Польтзователи')
+@ApiTags('Пользователи')
 @Controller('users')
 export class UsersController {
 	constructor(private usersService: UsersService) {}
@@ -25,15 +23,6 @@ export class UsersController {
 	@Get()
 	getAll() {
 		return this.usersService.getAllUsers();
-	}
-
-	@ApiOperation({ summary: 'Удалить всю базу данных' })
-	// @ApiResponse({ status: 200, type: [User] })
-	// @Roles('ADMIN')
-	// @UseGuards(RolesGuard)
-	@Delete()
-	nullUsersDatabase() {
-		// return this.usersService.nullUsersDatabase();
 	}
 
 	// @ApiOperation({ summary: 'Выдать роль' })

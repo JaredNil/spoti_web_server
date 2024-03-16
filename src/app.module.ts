@@ -13,8 +13,12 @@ import { Album } from './album/album.model';
 // import { UserAlbums } from './user-albums/user-albums.model';
 import { TrackModule } from './track/track.module';
 import { Track } from './track/track.model';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
+	controllers: [AppController],
+	providers: [AppService],
 	imports: [
 		ServeStaticModule.forRoot({
 			rootPath: path.resolve(__dirname, 'static'),
@@ -25,7 +29,6 @@ import { Track } from './track/track.model';
 		}),
 		UsersModule,
 		AuthModule,
-		// RolesModule,
 		TrackModule,
 		AlbumModule,
 		FileModule,
@@ -36,14 +39,10 @@ import { Track } from './track/track.model';
 			username: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
 			database: process.env.POSTGRES_DB,
-			models: [
-				User,
-				Track,
-				Album,
-				//  UserAlbums
-			],
+			models: [User, Track, Album],
 			autoLoadModels: true,
 		}),
+		SequelizeModule.forFeature([User, Album]),
 	],
 })
 export class AppModule {}

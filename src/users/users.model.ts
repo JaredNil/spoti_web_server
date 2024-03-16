@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsToMany, Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { Album } from 'src/album/album.model';
-// import { UserAlbums } from 'src/user-albums/user-albums.model';
 
 interface UserCreationAttrs {
 	username: string;

@@ -54,8 +54,8 @@ export class AuthService {
 
 		return { accessToken };
 	}
-	async signOut() {}
-	async getSessionInfo(sessionDto: GetSessionDto) {}
+
+	
 
 	// async login(userDto: CreateUserDto) {
 	// 	const user = await this.validateUser(userDto);
