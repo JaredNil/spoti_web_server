@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-// import { RolesGuard } from './auth/roles.guard';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
@@ -21,8 +20,8 @@ const start = async () => {
 
 		app.use(cookieParser());
 
-		app.enableCors({ credentials: true });
-		
+		app.enableCors({ credentials: true, origin: 'http://localhost:3000', methods: ['POST', 'GET'] });
+
 		await app.listen(PORT, () => console.log('server started on PORT ' + PORT));
 	} catch (error) {
 		console.log(error);

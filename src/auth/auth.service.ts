@@ -59,19 +59,22 @@ export class AuthService {
 		return { token, username };
 	}
 
-	async getSessionInfo(token: GetSessionDto) {
-		console.log(token.token);
-		const sessionInfo = await this.jwtService.verifyAsync<SessionDto>(token.token, {
-			secret: 'SECRET',
-		});
+	// async getSessionInfo(token: GetSessionDto) {
+	// 	console.log(token.token);
+	// 	if (!token.token) {
+	// 		throw new HttpException('Войдите снова', 205);
+	// 	}
+	// 	const sessionInfo = await this.jwtService.verifyAsync<SessionDto>(token.token, {
+	// 		secret: 'SECRET',
+	// 	});
 
-		const user = await this.userService.getUserByUsername(sessionInfo.username);
+	// 	const user = await this.userService.getUserByUsername(sessionInfo.username);
 
-		const accessToken = await this.generateToken(user);
-		const { username } = user;
+	// 	const accessToken = await this.generateToken(user);
+	// 	const { username } = user;
 
-		return { token, username };
-	}
+	// 	return { token, username };
+	// }
 
 	// async login(userDto: CreateUserDto) {
 	// 	const user = await this.validateUser(userDto);

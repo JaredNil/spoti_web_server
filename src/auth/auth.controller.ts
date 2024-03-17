@@ -43,19 +43,18 @@ export class AuthController {
 		this.cookieService.removeToken(res);
 	}
 
-	@Post('/session')
-	@ApiOkResponse()
-	async getSessionInfo(@Body() sessionDto: GetSessionDto) {
-		return await this.authService.getSessionInfo(sessionDto);
-	}
-
-	// ВЫХОД НЕ КУКИ
-	// @Get('/session')
-	// @ApiOkResponse({ type: GetSessionDto })
-	// @UseGuards(AuthGuard)
-	// getSessionInfo(@SessionInfo() session: GetSessionDto) {
-	// 	return session;
+	// @Post('/session')
+	// @ApiOkResponse()
+	// async getSessionInfo(@Body() sessionDto: GetSessionDto) {
+	// 	return await this.authService.getSessionInfo(sessionDto);
 	// }
+
+	@Get('/session')
+	@ApiOkResponse({ type: GetSessionDto })
+	@UseGuards(AuthGuard)
+	getSessionInfo(@SessionInfo() session: GetSessionDto) {
+		return session;
+	}
 
 	// @Post('/login')
 	// login(@Body() userDto: CreateUserDto) {

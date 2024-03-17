@@ -17,8 +17,6 @@ import { AuthService } from 'src/auth/auth.service';
 export class UsersService {
 	constructor(
 		@InjectModel(User) private userRepository: typeof User,
-		// @InjectModel(Album) private albumRepository: typeof Album,
-		// private authService: AuthService,
 		private trackService: TrackService,
 		private albumService: AlbumService
 	) {}
