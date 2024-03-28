@@ -32,7 +32,7 @@ export class AuthController {
 	async signIn(@Body() signDto: SignDto, @Res({ passthrough: true }) res: Response) {
 		const { token, username } = await this.authService.signIn(signDto);
 
-		// this.cookieService.setToken(res, accessToken.token);
+		this.cookieService.setToken(res, token);
 
 		return { token, username };
 	}
@@ -41,13 +41,9 @@ export class AuthController {
 	// @UseGuards(AuthGuard)
 	signOut(@Res({ passthrough: true }) res: Response) {
 		this.cookieService.removeToken(res);
-	}
 
-	// @Post('/session')
-	// @ApiOkResponse()
-	// async getSessionInfo(@Body() sessionDto: GetSessionDto) {
-	// 	return await this.authService.getSessionInfo(sessionDto);
-	// }
+		return true;
+	}
 
 	@Get('/session')
 	@ApiOkResponse({ type: GetSessionDto })

@@ -1,17 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './users.model';
-import { RolesService } from 'src/roles/roles.service';
-import { Album } from 'src/album/album.model';
-import { FileService, FileType } from 'src/file/file.service';
 
-import * as path from 'path';
 import * as fs from 'fs';
-import * as uuid from 'uuid';
-import { TrackService } from './../track/track.service';
+import * as path from 'path';
 import { AlbumService } from 'src/album/album.service';
-import { CreateUserDto } from './users.dto';
-import { AuthService } from 'src/auth/auth.service';
+import { TrackService } from './../track/track.service';
 
 @Injectable({})
 export class UsersService {
@@ -50,6 +44,11 @@ export class UsersService {
 				await this.albumService.pushTrack(albumId, track);
 			});
 		});
+	}
+
+	async getUserByName(username: string) {
+		const users = await this.userRepository.findOne({ include: { all: true }, where: { username } });
+		return users;
 	}
 
 	async getAllUsers() {

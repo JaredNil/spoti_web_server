@@ -14,6 +14,7 @@ export class AlbumController {
 
 	@Get()
 	getAllAlbum() {
+		console.log('getAllAlbums');
 		return this.albumService.getAlbumsAll();
 	}
 	@Post()

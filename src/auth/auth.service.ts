@@ -23,22 +23,34 @@ export class AuthService {
 	}
 
 	async signUp(signDto: SignDto) {
-		const user = await this.userService.getUserByUsername(signDto.username);
+		let user = await this.userService.getUserByUsername(signDto.username);
 
 		if (user) {
-			throw new BadRequestException({ type: 'user-intance exist' });
+			console.log('ВХОД');
+
+			const hash = await this.passwordService.getHash(signDto.password, user.salt);
+
+			if (hash !== user.hash) {
+				throw new UnauthorizedException();
+			}
+
+			const { token } = await this.generateToken(user);
+			const { username } = user;
+
+			return { token, username };
+		} else {
+			console.log('РЕГИСТРАЦИЯ');
+			const salt = await this.passwordService.getSalt();
+			const hash = await this.passwordService.getHash(signDto.password, salt);
+
+			const user = await this.userService.createUser(signDto.username, hash, salt);
+
+			const { token } = await this.generateToken(user);
+
+			const { username } = user;
+
+			return { token, username };
 		}
-
-		const salt = await this.passwordService.getSalt();
-		const hash = await this.passwordService.getHash(signDto.password, salt);
-
-		const newUser = await this.userService.createUser(signDto.username, hash, salt);
-
-		const { token } = await this.generateToken(newUser);
-
-		const { username } = newUser;
-
-		return { token, username };
 	}
 	async signIn(signDto: SignDto) {
 		const user = await this.userService.getUserByUsername(signDto.username);
