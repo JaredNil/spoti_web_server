@@ -21,7 +21,16 @@ export class UsersService {
 	}
 
 	async pushInitTracks(albumId: number, albumFolder: string) {
-		const folderPathMain = path.resolve('C:\\MAIN__FILES\\FOR_WEB\\spotic_server\\src\\InitTracks\\');
+		// const folderPathMain = path.resolve('C:\\MAIN__FILES\\FOR_WEB\\spotic_server\\src\\InitTracks\\');
+		console.log('HERE HERE');
+
+		console.log(process.cwd());
+		console.log(process.cwd());
+		console.log(process.cwd());
+
+		console.log('HERE HERE');
+
+		const folderPathMain = path.resolve(process.env.PATH_DEFAULT, 'src\\InitTracks\\');
 
 		let fileList = fs.readdirSync(path.resolve(folderPathMain, albumFolder));
 

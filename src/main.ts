@@ -20,7 +20,8 @@ const start = async () => {
 
 		app.use(cookieParser());
 
-		app.enableCors({ credentials: true, origin: 'http://localhost:3000', methods: ['POST', 'GET'] });
+		// app.enableCors({ credentials: true, origin: 'http://localhost:3000', methods: ['POST', 'GET'] });
+		app.enableCors({ credentials: true, origin: 'https://spoti-web.vercel.app', methods: ['POST', 'GET'] });
 
 		await app.listen(PORT, () => console.log('server started on PORT ' + PORT));
 	} catch (error) {
